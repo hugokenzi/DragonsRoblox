@@ -14,7 +14,7 @@ local dataStoreAvailable, playerDataStore = pcall(function()
 	return DataStoreService:GetDataStore(Config.SaveData.DataStoreName)
 end)
 if not dataStoreAvailable then
-	warn("DataService: DataStore indisponible (le lieu doit être publié au moins une fois sur Roblox pour sauvegarder). Les données ne seront pas sauvegardées pour cette session.")
+	warn("DataService: DataStore unavailable (the place must be published to Roblox at least once to save). Data will not be saved this session.")
 end
 
 local DataService = {}
@@ -52,10 +52,10 @@ local function syncMoneyDisplay(player: Player)
 		leaderstats.Parent = player
 	end
 
-	local money = leaderstats:FindFirstChild("Argent")
+	local money = leaderstats:FindFirstChild("Money")
 	if not money then
 		money = Instance.new("NumberValue")
-		money.Name = "Argent"
+		money.Name = "Money"
 		money.Parent = leaderstats
 	end
 	money.Value = data.money
@@ -80,7 +80,7 @@ function DataService.Load(player: Player)
 			data = result
 		else
 			if not ok then
-				warn(("DataService: échec du chargement pour %s, nouvelles données utilisées. Erreur : %s"):format(player.Name, tostring(result)))
+				warn(("DataService: failed to load data for %s, using fresh data. Error: %s"):format(player.Name, tostring(result)))
 			end
 			data = Config.newDefaultPlayerData()
 		end
@@ -88,7 +88,7 @@ function DataService.Load(player: Player)
 
 	cache[player.UserId] = data
 	syncMoneyDisplay(player)
-	print(("DataService: données chargées pour %s"):format(player.Name))
+	print(("DataService: data loaded for %s"):format(player.Name))
 end
 
 function DataService.Save(player: Player)
@@ -106,9 +106,9 @@ function DataService.Save(player: Player)
 	end)
 
 	if ok then
-		print(("DataService: données sauvegardées pour %s"):format(player.Name))
+		print(("DataService: data saved for %s"):format(player.Name))
 	else
-		warn(("DataService: échec de la sauvegarde pour %s. Erreur : %s"):format(player.Name, tostring(err)))
+		warn(("DataService: failed to save data for %s. Error: %s"):format(player.Name, tostring(err)))
 	end
 end
 
