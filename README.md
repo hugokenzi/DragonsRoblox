@@ -8,32 +8,32 @@ The full game design brief lives in [BRIEF.md](BRIEF.md) (in French — it's the
 
 ## Tech stack
 
-- **Roblox Studio** + **Rojo 7.7.0** (installed via [Rokit](https://github.com/rojo-rbx/rokit)) to sync code between this repo and Studio.
-- **Luau**, with `--!strict` where reasonable.
+- **Roblox Studio** + **Luau**, `--!strict` where reasonable.
+- No build/sync tool: the code in `src/` is the reference source, copied by hand into matching scripts in Roblox Studio (see below).
 - Code is in English; comments are in French (the project owner is a French-speaking Roblox beginner).
 
 ## Project structure
 
 ```
 src/
-  shared/   -> ReplicatedStorage.Shared   (Config, remotes, shared helpers)
-  server/   -> ServerScriptService.Server (data, world, eggs, dragons, economy)
-  client/   -> StarterPlayer.StarterPlayerScripts.Client (flight controls, HUD)
+  shared/   -> ReplicatedStorage > Shared     (Config, remotes, shared helpers)
+  server/   -> ServerScriptService > Server   (data, world, eggs, dragons, economy)
+  client/   -> StarterPlayer > StarterPlayerScripts > Client (flight controls, HUD)
 ```
 
-## Setup (one time)
+## Getting the code into Studio
 
-1. Install [Rokit](https://github.com/rojo-rbx/rokit) (toolchain manager).
-2. From this folder: `rokit install` (installs Rojo per `rokit.toml`).
-3. `rojo plugin install` (installs the Rojo plugin in Roblox Studio — restart Studio if it was open).
+There's no sync tool — copy the files by hand:
 
-## Working on the project
+1. In Roblox Studio's Explorer, create a `Folder` named `Shared` under `ReplicatedStorage`, a `Folder` named `Server` under `ServerScriptService`, and a `Folder` named `Client` under `StarterPlayer > StarterPlayerScripts`. Recreate any subfolders from `src/` the same way (e.g. `src/server/Services` -> a `Services` folder inside `Server`).
+2. For each file in `src/`, create a matching instance in the right folder:
+   - `*.server.luau` -> a `Script`
+   - `*.client.luau` -> a `LocalScript`
+   - anything else -> a `ModuleScript`
+   - name the instance after the file, without the extension (`DataService.luau` -> `DataService`)
+3. Copy the file's contents (e.g. open it in VS Code) and paste it into that instance's script editor in Studio.
+4. Press **Play**. The output should show `Server DragonsRoblox started` and `Client DragonsRoblox started`.
 
-1. `rojo serve`
-2. In Roblox Studio: **Plugins > Rojo > Connect**.
-3. Press **Play**. The output should show `Server DragonsRoblox started` and `Client DragonsRoblox started`.
-4. Edit code under `src/` (with VS Code or an AI coding assistant) — Rojo pushes changes to Studio automatically.
-
-Data is saved with `DataStoreService`. In Studio, `DataStoreService` only works once the place has been published at least once (**File > Publish to Roblox**); until then the game runs normally but nothing persists between sessions.
+Data is saved with `DataStoreService`. In Studio, it only works once the place has been published at least once (**File > Publish to Roblox**); until then the game runs normally but nothing persists between sessions.
 
 See [CHANGELOG.md](CHANGELOG.md) for what's been built so far.

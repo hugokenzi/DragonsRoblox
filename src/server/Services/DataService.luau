@@ -60,6 +60,7 @@ local function syncMoneyDisplay(player: Player)
 	end
 	money.Value = data.money
 end
+DataService.SyncMoneyDisplay = syncMoneyDisplay
 
 -- Renvoie les données en mémoire d'un joueur (déjà chargées via Load).
 function DataService.Get(player: Player): any

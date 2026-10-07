@@ -11,29 +11,20 @@ Jeu Roblox de collection de dragons. Le joueur vole sur son dragon-monture pour 
 
 - Il débute en développement Roblox. Explique simplement, en français, ce que tu fais et pourquoi.
 - Il teste dans Roblox Studio et te renvoie les erreurs de la console. Corrige la cause, pas le symptôme.
-- Avance une étape du brief à la fois. À la fin de chaque étape : dis ce qui a changé, comment tester dans Studio, puis attends son retour.
 - Pose la question plutôt que de deviner quand une décision change le gameplay.
+- Le jeu lui-même (interface, textes, annonces) est en **anglais**. Le code (variables, fonctions) est en anglais, les commentaires en français, et le chat avec lui reste en français.
+- Après chaque modification, committe et pousse sur GitHub (https://github.com/hugokenzi/DragonsRoblox).
 
 ## Environnement
 
 - Windows, PowerShell. Roblox Studio et VS Code sont installés.
-- Synchronisation du code avec **Rojo 7.7.0**, installé via **Rokit** (`rokit.toml` à la racine).
-- Projet Rojo : `default.project.json`.
-  - `src/shared` → `ReplicatedStorage.Shared`
-  - `src/server` → `ServerScriptService.Server`
-  - `src/client` → `StarterPlayer.StarterPlayerScripts.Client`
-- Fichiers en `.luau` : `*.server.luau` pour les scripts serveur, `*.client.luau` pour les scripts joueur, sinon ModuleScript.
-
-## Installation restant à faire (première session)
-
-Rien n'est encore installé côté outils. Si `rojo --version` échoue :
-
-1. Installer Rokit (https://github.com/rojo-rbx/rokit). Sur Windows : télécharger la dernière release `windows-x86_64.zip`, la décompresser, puis `.\rokit.exe self-install`. Un nouveau terminal est nécessaire ensuite pour que `rokit` soit dans le PATH.
-2. Dans ce dossier : `rokit install` (installe Rojo d'après `rokit.toml`).
-3. `rojo plugin install` (plugin Rojo dans Roblox Studio ; Studio doit être redémarré s'il était ouvert).
-4. Vérifier avec `rojo --version`, puis expliquer à l'utilisateur comment lancer `rojo serve` et cliquer sur **Plugins > Rojo > Connect** dans Studio.
-
-Demande à l'utilisateur avant de télécharger ou d'installer quoi que ce soit.
+- **Pas d'outil de synchronisation.** Le code source de référence vit dans `src/` (ce dépôt Git) ; l'utilisateur le copie-colle à la main dans Roblox Studio. Rojo a été essayé puis retiré (désinstallé le 7/10/2026) au profit de cette approche.
+- Correspondance entre `src/` et l'explorateur Studio (dossiers à recréer une fois dans Studio, avec des `Folder`) :
+  - `src/shared/*` → des `ModuleScript` dans un `Folder` nommé `Shared` sous `ReplicatedStorage`
+  - `src/server/*` → sous un `Folder` nommé `Server` dans `ServerScriptService` (les sous-dossiers comme `Services/` sont aussi des `Folder`)
+  - `src/client/*` → sous un `Folder` nommé `Client` dans `StarterPlayer.StarterPlayerScripts`
+- Type d'instance et nom : `*.server.luau` → `Script` ; `*.client.luau` → `LocalScript` ; sinon → `ModuleScript`. Le nom de l'instance Studio = nom du fichier sans l'extension (`DataService.luau` → `DataService`).
+- Quand un fichier est créé ou modifié, le dire clairement avec son chemin complet, pour que l'utilisateur sache où le coller dans Studio.
 
 ## Règles de code
 
@@ -46,5 +37,4 @@ Demande à l'utilisateur avant de télécharger ou d'installer quoi que ce soit.
 
 ## État actuel
 
-- Projet Rojo créé, avec des scripts de démarrage vides (`Main.server.luau`, `Main.client.luau`, `Config.luau`).
-- Aucune étape du brief n'est encore réalisée. Prochaine étape : installation des outils, puis étape 1 du brief.
+Voir `CHANGELOG.md` pour le détail à jour de ce qui est fait.
