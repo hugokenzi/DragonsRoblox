@@ -7,7 +7,15 @@ local Players = game:GetService("Players")
 
 local Config = require(game:GetService("ReplicatedStorage").Shared.Config)
 
-local playerDataStore = DataStoreService:GetDataStore(Config.SaveData.DataStoreName)
+-- GetDataStore échoue si le lieu n'a jamais été publié sur Roblox (cas courant en
+-- Studio tant qu'on n'a pas fait "File > Publish to Roblox" au moins une fois).
+-- On continue alors sans sauvegarde plutôt que de planter tout le serveur.
+local dataStoreAvailable, playerDataStore = pcall(function()
+	return DataStoreService:GetDataStore(Config.SaveData.DataStoreName)
+end)
+if not dataStoreAvailable then
+	warn("DataService: DataStore indisponible (le lieu doit être publié au moins une fois sur Roblox pour sauvegarder). Les données ne seront pas sauvegardées pour cette session.")
+end
 
 local DataService = {}
 
@@ -59,18 +67,23 @@ function DataService.Get(player: Player): any
 end
 
 function DataService.Load(player: Player)
-	local ok, result = attemptWithRetries(function()
-		return playerDataStore:GetAsync("Player_" .. player.UserId)
-	end)
-
 	local data
-	if ok and result ~= nil then
-		data = result
-	else
-		if not ok then
-			warn(("DataService: échec du chargement pour %s, nouvelles données utilisées. Erreur : %s"):format(player.Name, tostring(result)))
-		end
+
+	if not dataStoreAvailable then
 		data = Config.newDefaultPlayerData()
+	else
+		local ok, result = attemptWithRetries(function()
+			return playerDataStore:GetAsync("Player_" .. player.UserId)
+		end)
+
+		if ok and result ~= nil then
+			data = result
+		else
+			if not ok then
+				warn(("DataService: échec du chargement pour %s, nouvelles données utilisées. Erreur : %s"):format(player.Name, tostring(result)))
+			end
+			data = Config.newDefaultPlayerData()
+		end
 	end
 
 	cache[player.UserId] = data
@@ -81,6 +94,10 @@ end
 function DataService.Save(player: Player)
 	local data = cache[player.UserId]
 	if not data then
+		return
+	end
+
+	if not dataStoreAvailable then
 		return
 	end
 
