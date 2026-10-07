@@ -1,2 +1,2 @@
 -- Point d'entrée du joueur.
-print("Client DragonsRoblox démarré")
+print("Client DragonsRoblox started")

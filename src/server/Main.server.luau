@@ -5,6 +5,9 @@ local Players = game:GetService("Players")
 
 local Config = require(game:GetService("ReplicatedStorage").Shared.Config)
 local DataService = require(script.Parent.Services.DataService)
+local WorldService = require(script.Parent.Services.WorldService)
+
+WorldService.Generate()
 
 Players.PlayerAdded:Connect(function(player)
 	DataService.Load(player)
@@ -28,4 +31,4 @@ game:BindToClose(function()
 	DataService.SaveAll()
 end)
 
-print("Serveur DragonsRoblox démarré")
+print("Server DragonsRoblox started")
